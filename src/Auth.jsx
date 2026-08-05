@@ -46,7 +46,7 @@ const Auth = () => {
       </div> */}
 
       <div className="cont w-full flex items-center justify-center">
-        <div className="w-full max-w-md bg-white backdrop-blur-sm border border-white/10 rounded-2xl p-8 flex flex-col gap-6 relative overflow-hidden shadow-sm">
+        <div className="w-full max-w-md bg-slate-100 backdrop-blur-sm border border-white/10 rounded-2xl p-8 flex flex-col gap-6 relative overflow-hidden shadow-sm">
           <div className="w-52 h-52 bg-primary/5 rounded-full absolute -top-16 -right-16 blur-2xl" />
 
           <div className="flex flex-col items-center gap-2 relative">
