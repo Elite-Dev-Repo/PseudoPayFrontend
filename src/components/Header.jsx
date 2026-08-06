@@ -10,6 +10,9 @@ import { ACCESS } from "../api/constants";
 import { Link } from "react-router-dom";
 
 import stack from "../assets/stack.png";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { GithubIcon } from "@hugeicons/core-free-icons";
+
 const Header = () => {
   const NavLinks = [
     {
@@ -64,7 +67,18 @@ const Header = () => {
                 </li>
               ))}
             </ul>
-            <div className="flex items-center gap-2">
+
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4">
+                <Link to="/docs">
+                  <p className="text-sm font-medium tracking-wider">Docs</p>
+                </Link>
+                <HugeiconsIcon
+                  icon={GithubIcon}
+                  size={20}
+                  className="cursor-pointer"
+                />
+              </div>
               {token ? (
                 <Link to="/dashboard">
                   <button className="px-5 font-semibold py-1.5 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
@@ -98,8 +112,8 @@ const Header = () => {
               Accept payments, automate billing, and monetize your software
               globally. We handle the money, so you can focus on building.
             </p>
-            <Link to={token ? "/dashboard" : "/auth"}>
-              <button className="self-start pl-5 pr-3 py-2 rounded-lg bg-primary text-primary-foreground text-base font-semibold flex items-center gap-3">
+            <Link to="/dashboard" className="self-start">
+              <button className=" pl-5 pr-3 py-2 rounded-full bg-primary text-primary-foreground text-base font-semibold flex items-center gap-3">
                 Get Started{" "}
                 <span className="flex items-center p-1.5 bg-white rounded-full">
                   <ChevronRight className="text-black" size={20} />
