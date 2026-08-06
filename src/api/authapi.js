@@ -11,3 +11,6 @@ export const verifyEmail = (token) => api.post("/verify-email/", { token });
 export const resendCode = (email) => api.post("/resend-code/", { email });
 
 export const getProfile = () => api.get("/profile/");
+
+export const updateMerchantProfile = (data) =>
+  api.put("/update-merchant-profile/", data);

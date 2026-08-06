@@ -9,6 +9,9 @@ import {
   Zap,
 } from "lucide-react";
 
+import { ACCESS } from "../api/constants";
+import { Link } from "react-router-dom";
+
 const Business = () => {
   const solutions = [
     {
@@ -67,9 +70,11 @@ const Business = () => {
               internet business.
             </p>
           </div>
-          <button className="px-5 py-2 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
-            Start Selling <ArrowUpRight strokeWidth={1.5} size={19} />
-          </button>
+          <Link to={localStorage.getItem(ACCESS) ? "/dashboard" : "/auth"}>
+            <button className="px-5 py-2 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
+              Start Selling <ArrowUpRight strokeWidth={1.5} size={19} />
+            </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-3 gap-4">

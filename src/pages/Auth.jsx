@@ -15,10 +15,10 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-import { login, register, resendCode, verifyEmail } from "./api/authapi";
-import { ACCESS, REFRESH } from "./api/constants";
+import { login, register, resendCode, verifyEmail } from "../api/authapi";
+import { ACCESS, REFRESH } from "../api/constants";
 
-import authbg from "./assets/auth_bg.png";
+import authbg from "../assets/auth_bg.png";
 
 const GENDER_CHOICES = [
   { value: "Male", label: "Male" },
@@ -103,7 +103,7 @@ const Auth = () => {
       });
       localStorage.setItem(ACCESS, res.data.access);
       localStorage.setItem(REFRESH, res.data.refresh);
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(
         err?.response?.data?.detail || "Unable to sign in. Please try again.",
@@ -132,11 +132,7 @@ const Auth = () => {
       setNotice("We sent a verification code to your email.");
     } catch (err) {
       const data = err?.response?.data;
-      const firstError = data
-        ? Object.values(data)
-            .flat()
-            .join(", ")
-        : "";
+      const firstError = data ? Object.values(data).flat().join(", ") : "";
       setError(
         firstError || "Unable to create your account. Please try again.",
       );
@@ -339,202 +335,222 @@ const Auth = () => {
                     className="w-full py-2.5 bg-white border border-border rounded-xl flex items-center justify-center gap-2 text-sm font-medium hover:bg-muted transition-colors"
                   >
                     <GoogleIcon />
-                Continue with Google
-              </button>
+                    Continue with Google
+                  </button>
 
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-border" />
-                <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                  or continue with email
-                </span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-
-              <form
-                className="flex flex-col gap-4"
-                onSubmit={
-                  mode === "login" ? handleLoginSubmit : handleRegisterSubmit
-                }
-              >
-                {mode === "signup" && (
-                  <>
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="flex flex-col gap-1.5">
-                        <span className="text-sm font-medium">First Name</span>
-                        <input
-                          type="text"
-                          name="first_name"
-                          placeholder="Jane"
-                          value={registerData.first_name}
-                          onChange={handleRegisterChange}
-                          className={inputClasses}
-                        />
-                      </label>
-                      <label className="flex flex-col gap-1.5">
-                        <span className="text-sm font-medium">Last Name</span>
-                        <input
-                          type="text"
-                          name="last_name"
-                          placeholder="Doe"
-                          value={registerData.last_name}
-                          onChange={handleRegisterChange}
-                          className={inputClasses}
-                        />
-                      </label>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="flex flex-col gap-1.5">
-                        <span className="text-sm font-medium">
-                          Date of Birth
-                        </span>
-                        <div className="relative">
-                          <CalendarDays
-                            size={16}
-                            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-                          />
-                          <input
-                            type="date"
-                            name="date_of_birth"
-                            value={registerData.date_of_birth}
-                            onChange={handleRegisterChange}
-                            className={`${inputClasses} pl-10`}
-                          />
-                        </div>
-                      </label>
-
-                      <label className="flex flex-col gap-1.5">
-                        <span className="text-sm font-medium">Gender</span>
-                        <div className="relative">
-                          <ChevronDown
-                            size={16}
-                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
-                          />
-                          <select
-                            name="gender"
-                            value={registerData.gender}
-                            onChange={handleRegisterChange}
-                            className={`${inputClasses} appearance-none pr-10`}
-                          >
-                            <option value="" disabled>
-                              Select gender
-                            </option>
-                            {GENDER_CHOICES.map((choice) => (
-                              <option key={choice.value} value={choice.value}>
-                                {choice.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                      </label>
-                    </div>
-                  </>
-                )}
-
-                <label className="flex flex-col gap-1.5">
-                  <span className="text-sm font-medium">
-                    {mode === "signup" ? "Email" : "Email"}
-                  </span>
-                  <div className="relative">
-                    <Mail
-                      size={16}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="you@email.com"
-                      value={
-                        mode === "login" ? loginData.email : registerData.email
-                      }
-                      onChange={
-                        mode === "login"
-                          ? handleLoginChange
-                          : handleRegisterChange
-                      }
-                      className={`${inputClasses} pl-10`}
-                    />
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                      or continue with email
+                    </span>
+                    <div className="flex-1 h-px bg-border" />
                   </div>
-                </label>
 
-                <label className="flex flex-col gap-1.5">
-                  <span className="text-sm font-medium">Password</span>
-                  <div className="relative">
-                    <Lock
-                      size={16}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-                    />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      placeholder="••••••••"
-                      value={
-                        mode === "login"
-                          ? loginData.password
-                          : registerData.password
-                      }
-                      onChange={
-                        mode === "login"
-                          ? handleLoginChange
-                          : handleRegisterChange
-                      }
-                      className={`${inputClasses} pl-10 pr-10`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                </label>
+                  <form
+                    className="flex flex-col gap-4"
+                    onSubmit={
+                      mode === "login"
+                        ? handleLoginSubmit
+                        : handleRegisterSubmit
+                    }
+                  >
+                    {mode === "signup" && (
+                      <>
+                        <div className="grid grid-cols-2 gap-3">
+                          <label className="flex flex-col gap-1.5">
+                            <span className="text-sm font-medium">
+                              First Name
+                            </span>
+                            <input
+                              type="text"
+                              name="first_name"
+                              placeholder="Jane"
+                              value={registerData.first_name}
+                              onChange={handleRegisterChange}
+                              className={inputClasses}
+                            />
+                          </label>
+                          <label className="flex flex-col gap-1.5">
+                            <span className="text-sm font-medium">
+                              Last Name
+                            </span>
+                            <input
+                              type="text"
+                              name="last_name"
+                              placeholder="Doe"
+                              value={registerData.last_name}
+                              onChange={handleRegisterChange}
+                              className={inputClasses}
+                            />
+                          </label>
+                        </div>
 
-                {mode === "login" && (
-                  <div className="flex items-center justify-between text-sm">
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        name="remember"
-                        checked={loginData.remember}
-                        onChange={handleLoginChange}
-                        className="accent-primary rounded"
-                      />
-                      <span className="text-muted-foreground">Remember me</span>
+                        <div className="grid grid-cols-2 gap-3">
+                          <label className="flex flex-col gap-1.5">
+                            <span className="text-sm font-medium">
+                              Date of Birth
+                            </span>
+                            <div className="relative">
+                              <CalendarDays
+                                size={16}
+                                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+                              />
+                              <input
+                                type="date"
+                                name="date_of_birth"
+                                value={registerData.date_of_birth}
+                                onChange={handleRegisterChange}
+                                className={`${inputClasses} pl-10`}
+                              />
+                            </div>
+                          </label>
+
+                          <label className="flex flex-col gap-1.5">
+                            <span className="text-sm font-medium">Gender</span>
+                            <div className="relative">
+                              <ChevronDown
+                                size={16}
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                              />
+                              <select
+                                name="gender"
+                                value={registerData.gender}
+                                onChange={handleRegisterChange}
+                                className={`${inputClasses} appearance-none pr-10`}
+                              >
+                                <option value="" disabled>
+                                  Select gender
+                                </option>
+                                {GENDER_CHOICES.map((choice) => (
+                                  <option
+                                    key={choice.value}
+                                    value={choice.value}
+                                  >
+                                    {choice.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </label>
+                        </div>
+                      </>
+                    )}
+
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-sm font-medium">
+                        {mode === "signup" ? "Email" : "Email"}
+                      </span>
+                      <div className="relative">
+                        <Mail
+                          size={16}
+                          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+                        />
+                        <input
+                          type="email"
+                          name="email"
+                          placeholder="you@email.com"
+                          value={
+                            mode === "login"
+                              ? loginData.email
+                              : registerData.email
+                          }
+                          onChange={
+                            mode === "login"
+                              ? handleLoginChange
+                              : handleRegisterChange
+                          }
+                          className={`${inputClasses} pl-10`}
+                        />
+                      </div>
                     </label>
-                    <button type="button" className="text-primary font-medium">
-                      Forgot password?
+
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-sm font-medium">Password</span>
+                      <div className="relative">
+                        <Lock
+                          size={16}
+                          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+                        />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          name="password"
+                          placeholder="••••••••"
+                          value={
+                            mode === "login"
+                              ? loginData.password
+                              : registerData.password
+                          }
+                          onChange={
+                            mode === "login"
+                              ? handleLoginChange
+                              : handleRegisterChange
+                          }
+                          className={`${inputClasses} pl-10 pr-10`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+                        >
+                          {showPassword ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
+                      </div>
+                    </label>
+
+                    {mode === "login" && (
+                      <div className="flex items-center justify-between text-sm">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            name="remember"
+                            checked={loginData.remember}
+                            onChange={handleLoginChange}
+                            className="accent-primary rounded"
+                          />
+                          <span className="text-muted-foreground">
+                            Remember me
+                          </span>
+                        </label>
+                        <button
+                          type="button"
+                          className="text-primary font-medium"
+                        >
+                          Forgot password?
+                        </button>
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="mt-2 w-full py-3 bg-primary text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium hover:bg-primary/80 transition-colors disabled:opacity-50"
+                    >
+                      {loading
+                        ? mode === "login"
+                          ? "Signing in..."
+                          : "Creating account..."
+                        : mode === "login"
+                          ? "Sign In"
+                          : "Create Account"}{" "}
+                      <ArrowUpRight strokeWidth={1.5} size={19} />
                     </button>
-                  </div>
-                )}
+                  </form>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="mt-2 w-full py-3 bg-primary text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium hover:bg-primary/80 transition-colors disabled:opacity-50"
-                >
-                  {loading
-                    ? mode === "login"
-                      ? "Signing in..."
-                      : "Creating account..."
-                    : mode === "login"
-                      ? "Sign In"
-                      : "Create Account"}{" "}
-                  <ArrowUpRight strokeWidth={1.5} size={19} />
-                </button>
-              </form>
-
-              <p className="text-center text-sm text-muted-foreground">
-                {mode === "login"
-                  ? "Don't have an account? "
-                  : "Already have an account? "}
-                <button
-                  onClick={toggleMode}
-                  className="text-primary font-medium hover:underline"
-                >
-                  {mode === "login" ? "Sign up" : "Log in"}
-                </button>
-              </p>
+                  <p className="text-center text-sm text-muted-foreground">
+                    {mode === "login"
+                      ? "Don't have an account? "
+                      : "Already have an account? "}
+                    <button
+                      onClick={toggleMode}
+                      className="text-primary font-medium hover:underline"
+                    >
+                      {mode === "login" ? "Sign up" : "Log in"}
+                    </button>
+                  </p>
                 </>
               )}
             </div>

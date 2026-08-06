@@ -46,9 +46,11 @@ const Faqs = () => {
             Read what people are asking about PseudoPay. <br />
             Can't find your answer? Reach out to our team.
           </p>
-          <button className="px-5 py-2 bg-primary text-primary-foreground rounded-full">
-            Contact Support
-          </button>
+          <a href="#contact">
+            <button className="px-5 py-2 bg-primary text-primary-foreground rounded-full">
+              Contact Support
+            </button>
+          </a>
         </div>
 
         <div className="flex-1 flex flex-col gap-3">

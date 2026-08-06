@@ -5,6 +5,8 @@ import {
   SwatchBook,
 } from "lucide-react";
 
+import { ACCESS } from "../api/constants";
+
 import { Link } from "react-router-dom";
 
 import stack from "../assets/stack.png";
@@ -31,6 +33,8 @@ const Header = () => {
       href: "#contact",
     },
   ];
+
+  const token = localStorage.getItem(ACCESS);
 
   return (
     <section className="min-h-screen w-screen">
@@ -61,11 +65,19 @@ const Header = () => {
               ))}
             </ul>
             <div className="flex items-center gap-2">
-              <Link to="/auth">
-                <button className="px-5 py-1.5 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
-                  Join us <ArrowUpRight strokeWidth={1.5} size={19} />
-                </button>
-              </Link>
+              {token ? (
+                <Link to="/dashboard">
+                  <button className="px-5 font-semibold py-1.5 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
+                    Dashboard
+                  </button>
+                </Link>
+              ) : (
+                <Link to="/auth">
+                  <button className="px-5 font-semibold py-1.5 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
+                    Join us <ArrowUpRight strokeWidth={1.5} size={19} />
+                  </button>
+                </Link>
+              )}
             </div>
           </div>
         </nav>
@@ -76,12 +88,9 @@ const Header = () => {
           <div className="flex-1 flex items-center justify-center flex-col px-5 gap-5">
             <h1 className="text-6xl font-semibold text-start relative leading-tight">
               Mock Payment{" "}
-              <span className="bg-[#C0FF71] text-black px-2 rounded-sm">
-                Gateway
-              </span>{" "}
-              for
-              <span className="flex items-center p-2 bg-[#C0FF71] rounded-sm w-fit absolute top-19 right-44">
-                <PlaneTakeoff strokeWidth={1.75} className="text-black" />
+              <span className=" text-black px-2 rounded-sm">Gateway</span> for
+              <span className="flex items-center p-2 bg-primary rounded-sm w-fit absolute top-19 right-44">
+                <PlaneTakeoff strokeWidth={1.75} className="text-white  " />
               </span>
               <br /> Internet Businesses
             </h1>
@@ -89,12 +98,14 @@ const Header = () => {
               Accept payments, automate billing, and monetize your software
               globally. We handle the money, so you can focus on building.
             </p>
-            <button className="self-start pl-5 pr-3 py-2 rounded-lg bg-primary text-primary-foreground text-base flex items-center gap-3">
-              Get Started{" "}
-              <span className="flex items-center p-1.5 bg-[#C0FF71] rounded-full">
-                <ChevronRight className="text-black" size={20} />
-              </span>
-            </button>
+            <Link to={token ? "/dashboard" : "/auth"}>
+              <button className="self-start pl-5 pr-3 py-2 rounded-lg bg-primary text-primary-foreground text-base font-semibold flex items-center gap-3">
+                Get Started{" "}
+                <span className="flex items-center p-1.5 bg-white rounded-full">
+                  <ChevronRight className="text-black" size={20} />
+                </span>
+              </button>
+            </Link>
           </div>
           <div className="flex-1 flex items-center justify-center">
             <img src={stack} alt="" />

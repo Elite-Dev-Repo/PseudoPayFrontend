@@ -29,9 +29,11 @@ const About = () => {
         <div className="w-full h-[40vh]  rounded-2xl flex items-center justify-center">
           <div className="flex-1 flex flex-col items-start ml-12 p-3 justify-center gap-5">
             <h3 className="text-4xl font-bold">What is PseudoPay?</h3>
-            <button className="bg-primary text-white px-4 py-2 rounded-lg">
-              Explore Features
-            </button>
+            <a href="#business">
+              <button className="bg-primary text-white px-4 py-2 rounded-lg">
+                Explore Features
+              </button>
+            </a>
           </div>
           <div className="flex-1">
             <p className="text-lg font-semibold p-3 ">
