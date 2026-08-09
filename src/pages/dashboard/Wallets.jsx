@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Plus, Wallet as WalletIcon } from "lucide-react";
+import { Plus, SquarePen, Wallet as WalletIcon } from "lucide-react";
 
-import { listWallets, createWallet } from "../../api/walletapi";
+import { listWallets, createWallet, updateWallet } from "../../api/walletapi";
 import {
   Badge,
   Button,
@@ -36,11 +36,16 @@ const Wallets = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [showEdit, setShowEdit] = useState(false);
+  const [editWallet, setEditWallet] = useState(null);
+  const [editForm, setEditForm] = useState({ request_origin: "" });
 
   const fetchWallets = () => {
     listWallets()
       .then((res) => setWallets(res.data))
-      .catch((err) => setError(err?.response?.data?.detail || "Failed to load wallets."))
+      .catch((err) =>
+        setError(err?.response?.data?.detail || "Failed to load wallets."),
+      )
       .finally(() => setLoading(false));
   };
 
@@ -51,6 +56,35 @@ const Wallets = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setNotice("");
+    setSubmitting(true);
+    try {
+      await updateWallet(editWallet.id, editForm);
+      setNotice("Wallet updated successfully.");
+      setShowEdit(false);
+      setEditWallet(null);
+      setEditForm({ request_origin: "" });
+      fetchWallets();
+    } catch (err) {
+      const data = err?.response?.data;
+      setError(
+        data
+          ? Object.values(data).flat().join(", ")
+          : "Unable to update the wallet.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -117,12 +151,27 @@ const Wallets = () => {
                   {wallet.currency} Wallet
                 </p>
                 <p className="text-2xl font-bold mt-1">
-                  {wallet.currency} {Number(wallet.balance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  {wallet.currency}{" "}
+                  {Number(wallet.balance).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                  })}
                 </p>
               </div>
-              <p className="text-xs text-muted-foreground truncate">
-                {wallet.request_origin || "No request origin set"}
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-muted-foreground truncate">
+                  {wallet.request_origin || "No request origin set"}
+                </p>
+                <SquarePen
+                  size={15}
+                  className="text-primary cursor-pointer"
+                  onClick={() => {
+                    setEditWallet(wallet);
+                    setEditForm({ request_origin: wallet.request_origin || "" });
+                    setError("");
+                    setShowEdit(true);
+                  }}
+                />
+              </div>
             </Card>
           ))}
         </div>
@@ -164,6 +213,35 @@ const Wallets = () => {
           <ErrorBanner message={error} />
           <Button type="submit" loading={submitting} className="mt-2">
             Create wallet
+          </Button>
+        </form>
+      </Modal>
+
+      <Modal
+        open={showEdit}
+        onClose={() => {
+          setShowEdit(false);
+          setEditWallet(null);
+        }}
+        title="Edit request origin"
+      >
+        <form className="flex flex-col gap-4" onSubmit={handleEditSubmit}>
+          <Field
+            label="Request origin"
+            hint="The URL your payment requests will come from."
+          >
+            <input
+              type="url"
+              name="request_origin"
+              placeholder="https://yourstore.com"
+              value={editForm.request_origin}
+              onChange={handleEditChange}
+              className={inputClasses}
+            />
+          </Field>
+          <ErrorBanner message={error} />
+          <Button type="submit" loading={submitting} className="mt-2">
+            Save changes
           </Button>
         </form>
       </Modal>

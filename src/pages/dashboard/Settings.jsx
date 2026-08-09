@@ -11,6 +11,7 @@ import {
   SuccessBanner,
   inputClasses,
 } from "../../components/dashboard/ui";
+import { Crown, HatGlasses } from "lucide-react";
 
 const USER_TYPES = [
   { value: "free", label: "Free" },
@@ -25,7 +26,6 @@ const Settings = () => {
   const [profile, setProfile] = useState(null);
 
   const [form, setForm] = useState({
-    user_type: "free",
     merchant_address: "",
     merchant_phone: "",
     merchant_description: "",
@@ -35,8 +35,8 @@ const Settings = () => {
     getProfile()
       .then((res) => {
         setProfile(res.data);
+        console.log(res.data);
         setForm({
-          user_type: res.data.profile?.user_type || "free",
           merchant_address: res.data.profile?.merchant_address || "",
           merchant_phone: res.data.profile?.merchant_phone || "",
           merchant_description: res.data.profile?.merchant_description || "",
@@ -64,7 +64,9 @@ const Settings = () => {
     } catch (err) {
       const data = err?.response?.data;
       setError(
-        data ? Object.values(data).flat().join(", ") : "Unable to update profile.",
+        data
+          ? Object.values(data).flat().join(", ")
+          : "Unable to update profile.",
       );
     } finally {
       setSaving(false);
@@ -117,23 +119,23 @@ const Settings = () => {
         </Card>
 
         <Card className="lg:col-span-2">
-          <h3 className="font-semibold text-lg mb-4">Merchant profile</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-lg mb-4">Merchant profile</h3>{" "}
+            <p
+              className={`inline-flex items-center gap-2 border w-fit rounded-full px-4 py-1.5 font-semibold text-sm ${profile?.profile?.user_type === "free" ? "text-green-500" : "text-blue-500"}`}
+            >
+              {profile?.profile?.user_type === "free" ? (
+                <>
+                  <HatGlasses className="w-4 h-4" /> Free
+                </>
+              ) : (
+                <>
+                  <Crown className="w-4 h-4" /> Premium
+                </>
+              )}
+            </p>
+          </div>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <Field label="Account type">
-              <select
-                name="user_type"
-                value={form.user_type}
-                onChange={handleChange}
-                className={inputClasses}
-              >
-                {USER_TYPES.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-            </Field>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Business address">
                 <input

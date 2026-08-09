@@ -121,7 +121,7 @@ const Transactions = () => {
                       </Badge>
                     </td>
                     <td
-                      className={`px-6 py-4 font-semibold ${
+                      className={`px-6 py-4 font-semibold truncate ${
                         txn.transaction_type === "CREDIT"
                           ? "text-green-600"
                           : "text-red-500"
