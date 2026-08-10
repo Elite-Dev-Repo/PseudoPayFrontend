@@ -108,7 +108,7 @@ const Header = () => {
           </div>
 
           {mobileOpen && (
-            <div className="md:hidden absolute left-0 right-0 top-14 bg-white border-b border-border shadow-lg rounded-b-2xl p-4 flex flex-col gap-1">
+            <div className="md:hidden absolute left-0 right-0 top-14 bg-white border-b border-border shadow-lg rounded-b-2xl p-4 flex flex-col gap-1 z-10">
               {NavLinks.map((link) => (
                 <a
                   key={link.name}
@@ -130,21 +130,14 @@ const Header = () => {
           )}
         </nav>
 
-        <div className="w-full min-h-screen bg-slate-50 rounded-2xl flex flex-col-reverse lg:flex-row items-center lg:justify-around relative overflow-hidden">
+        <div className="w-full min-h-screen bg-slate-50 rounded-2xl flex flex-col lg:flex-row items-center lg:justify-around relative overflow-hidden">
           <div className="w-100 h-100 bg-primary/5 rounded-full absolute top-0 left-0 blur-2xl"></div>
           <div className="w-100 h-100 bg-primary/10 rounded-full absolute top-10 right-40 blur-2xl"></div>
 
-          <div className="flex-1 w-full flex items-center justify-center order-1 lg:order-none pt-6 lg:pt-0">
-            <img
-              src={stack}
-              alt=""
-              className="max-w-[260px] sm:max-w-sm lg:max-w-none"
-            />
-          </div>
-
-          <div className="w-full flex-1 flex flex-col items-center lg:items-start gap-5 px-5 pb-10 lg:pb-0 text-center lg:text-left">
+          <div className="w-full mt-10 flex-1 flex flex-col items-center lg:items-start gap-5 px-5 pb-10 lg:pb-0 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight relative">
-              Mock Payment <span className="text-black px-2 rounded-sm">Gateway</span> for
+              Mock Payment{" "}
+              <span className="text-black px-2 rounded-sm">Gateway</span> for
               <span className="hidden lg:flex items-center p-2 bg-primary rounded-sm w-fit absolute top-19 right-44">
                 <PlaneTakeoff strokeWidth={1.75} className="text-white" />
               </span>
@@ -162,6 +155,13 @@ const Header = () => {
                 </span>
               </button>
             </Link>
+          </div>
+          <div className="flex-1 w-full flex items-center justify-center order-1 lg:order-none pt-6 lg:pt-0">
+            <img
+              src={stack}
+              alt=""
+              className="max-w-[260px] sm:max-w-sm lg:max-w-none"
+            />
           </div>
         </div>
       </div>
