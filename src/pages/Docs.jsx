@@ -23,7 +23,7 @@ import { GithubIcon } from "@hugeicons/core-free-icons";
 
 import { ACCESS } from "../api/constants";
 
-const BASE_URL = "http://127.0.0.1:8000/api";
+const BASE_URL = "https://pseudopaybackend.onrender.com/api";
 
 const CodeBlock = ({ title = "bash", code }) => {
   const [copied, setCopied] = useState(false);
@@ -711,7 +711,7 @@ window.location.href = checkout_url;`}
   "customer_name": "Alice",
   "transaction_metadata": { "order_id": "ORD-123" },
   "created_at": "2026-08-10T12:00:00Z",
-  "checkout_url": "http://127.0.0.1:8000/api/checkout/TRX-1a2b3c4d1700000000000/"
+  "checkout_url": "https://pseudopaybackend.onrender.com/api/checkout/TRX-1a2b3c4d1700000000000/"
 }`}
               note="transaction_type is DEBIT or CREDIT and amount cannot be less than 500. The wallet must be ACTIVE. You may also send the key as Authorization: Api-Key <key>."
             />
@@ -882,7 +882,7 @@ window.location.href = checkout_url;`}
               title="javascript"
               code={`import axios from "axios";
 
-const api = axios.create({ baseURL: "http://127.0.0.1:8000/api" });
+const api = axios.create({ baseURL: "https://pseudopaybackend.onrender.com/api" });
 let accessToken = null;
 
 // 1. Log in
@@ -907,7 +907,7 @@ async function createWallet() {
 // 3. Initialize a payment (server-side, with your secret key)
 async function initializePayment(walletId) {
   const { data } = await axios.post(
-    "http://127.0.0.1:8000/api/transaction/initialize/",
+    "https://pseudopaybackend.onrender.com/api/transaction/initialize/",
     {
       wallet: walletId,
       amount: 5000,
@@ -934,7 +934,7 @@ const checkoutUrl = await initializePayment(walletId);
               title="python"
               code={`import requests
 
-BASE_URL = "http://127.0.0.1:8000/api"
+BASE_URL = "https://pseudopaybackend.onrender.com/api"
 SECRET_KEY = "sk_pseudo_9fT2...xKp7"  # your secret API key
 
 response = requests.post(
