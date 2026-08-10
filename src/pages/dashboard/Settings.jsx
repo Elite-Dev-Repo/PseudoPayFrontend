@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getProfile, updateMerchantProfile } from "../../api/authapi";
+import { getProfile, updateMerchantProfile, updateUserProfile } from "../../api/authapi";
 import {
   Button,
   Card,
@@ -11,11 +11,11 @@ import {
   SuccessBanner,
   inputClasses,
 } from "../../components/dashboard/ui";
-import { Crown, HatGlasses } from "lucide-react";
+import { CalendarDays, ChevronDown, Crown, HatGlasses } from "lucide-react";
 
-const USER_TYPES = [
-  { value: "free", label: "Free" },
-  { value: "premium", label: "Premium" },
+const GENDER_CHOICES = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
 ];
 
 const Settings = () => {
@@ -29,17 +29,20 @@ const Settings = () => {
     merchant_address: "",
     merchant_phone: "",
     merchant_description: "",
+    date_of_birth: "",
+    gender: "",
   });
 
   useEffect(() => {
     getProfile()
       .then((res) => {
         setProfile(res.data);
-        console.log(res.data);
         setForm({
           merchant_address: res.data.profile?.merchant_address || "",
           merchant_phone: res.data.profile?.merchant_phone || "",
           merchant_description: res.data.profile?.merchant_description || "",
+          date_of_birth: res.data.date_of_birth || "",
+          gender: res.data.gender || "",
         });
       })
       .catch((err) =>
@@ -59,7 +62,17 @@ const Settings = () => {
     setNotice("");
     setSaving(true);
     try {
-      await updateMerchantProfile(form);
+      await Promise.all([
+        updateMerchantProfile({
+          merchant_address: form.merchant_address,
+          merchant_phone: form.merchant_phone,
+          merchant_description: form.merchant_description,
+        }),
+        updateUserProfile({
+          date_of_birth: form.date_of_birth || null,
+          gender: form.gender,
+        }),
+      ]);
       setNotice("Profile updated successfully.");
     } catch (err) {
       const data = err?.response?.data;
@@ -136,6 +149,56 @@ const Settings = () => {
             </p>
           </div>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-1.5">
+              <h4 className="font-semibold">Account details</h4>
+              <p className="text-xs text-muted-foreground">
+                Update your personal information.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Date of birth">
+                <div className="relative">
+                  <CalendarDays
+                    size={16}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  />
+                  <input
+                    type="date"
+                    name="date_of_birth"
+                    value={form.date_of_birth}
+                    onChange={handleChange}
+                    className={`${inputClasses} pl-10`}
+                  />
+                </div>
+              </Field>
+              <Field label="Gender">
+                <div className="relative">
+                  <ChevronDown
+                    size={16}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+                  />
+                  <select
+                    name="gender"
+                    value={form.gender}
+                    onChange={handleChange}
+                    className={`${inputClasses} appearance-none pr-10`}
+                  >
+                    <option value="" disabled>
+                      Select gender
+                    </option>
+                    {GENDER_CHOICES.map((choice) => (
+                      <option key={choice.value} value={choice.value}>
+                        {choice.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </Field>
+            </div>
+
+            <div className="h-px bg-border" />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Business address">
                 <input

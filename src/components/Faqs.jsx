@@ -34,16 +34,16 @@ const Faqs = () => {
 
   return (
     <section className="min-h-screen w-screen" id="faqs">
-      <div className="cont min-h-screen flex items-center justify-between gap-12 py-12">
-        <div className="flex-1 flex flex-col items-start gap-5">
+      <div className="cont min-h-screen flex flex-col lg:flex-row items-center lg:justify-between gap-10 py-12">
+        <div className="w-full lg:w-auto lg:flex-1 flex flex-col items-center lg:items-start gap-5 text-center lg:text-left">
           <span className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center">
             <HelpCircle size={22} />
           </span>
-          <h3 className="text-4xl font-bold">
+          <h3 className="text-3xl sm:text-4xl font-bold">
             Frequently Asked <br /> Questions
           </h3>
-          <p className="text-lg text-muted-foreground">
-            Read what people are asking about PseudoPay. <br />
+          <p className="text-base sm:text-lg text-muted-foreground">
+            Read what people are asking about PseudoPay. <br className="hidden lg:block" />
             Can't find your answer? Reach out to our team.
           </p>
           <a href="#contact">
@@ -53,7 +53,7 @@ const Faqs = () => {
           </a>
         </div>
 
-        <div className="flex-1 flex flex-col gap-3">
+        <div className="w-full lg:flex-1 flex flex-col gap-3">
           {faqs.map((faq, index) => (
             <div
               key={index}

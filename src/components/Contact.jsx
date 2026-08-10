@@ -29,8 +29,8 @@ const Contact = () => {
   return (
     <section className="min-h-screen w-screen" id="contact">
       <div className="cont min-h-screen flex flex-col justify-end pb-5">
-        <div className="bg-primary text-white rounded-2xl p-10">
-          <div className="grid grid-cols-4 gap-8">
+        <div className="bg-primary text-white rounded-2xl p-8 sm:p-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="flex flex-col gap-4">
               <p className="text-lg font-semibold flex items-center gap-2">
                 <span className="bg-white p-2 rounded-sm flex items-center justify-center">
@@ -102,7 +102,7 @@ const Contact = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between py-4 text-sm text-muted-foreground">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 py-4 text-sm text-muted-foreground">
           <p>&copy; 2026 PseudoPay. All rights reserved.</p>
           <div className="flex items-center gap-5">
             <a href="#" className="hover:text-primary">

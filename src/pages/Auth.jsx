@@ -13,10 +13,12 @@ import {
   SwatchBook,
 } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { login, register, resendCode, verifyEmail } from "../api/authapi";
+import { login, register, resendCode, verifyEmail, googleLogin } from "../api/authapi";
+import { signInWithGoogle } from "../api/googleauth";
 import { ACCESS, REFRESH } from "../api/constants";
+import { useGoogleLogin } from "@react-oauth/google";
 
 import authbg from "../assets/auth_bg.png";
 
@@ -48,6 +50,7 @@ const GoogleIcon = () => (
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [mode, setMode] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -91,6 +94,24 @@ const Auth = () => {
     setRegisterData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleGoogleLogin = async () => {
+    setError("");
+    setNotice("");
+    try {
+      const accessToken = await signInWithGoogle();
+      const res = await googleLogin(accessToken);
+      localStorage.setItem(ACCESS, res.data.access);
+      localStorage.setItem(REFRESH, res.data.refresh);
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
+    } catch (err) {
+      const data = err?.response?.data;
+      setError(
+        data?.detail || "Could not sign in with Google. Please try again.",
+      );
+    }
+  };
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -103,7 +124,8 @@ const Auth = () => {
       });
       localStorage.setItem(ACCESS, res.data.access);
       localStorage.setItem(REFRESH, res.data.refresh);
-      navigate("/dashboard");
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from, { replace: true });
     } catch (err) {
       setError(
         err?.response?.data?.detail || "Unable to sign in. Please try again.",
@@ -332,6 +354,7 @@ const Auth = () => {
                 <>
                   <button
                     type="button"
+                    onClick={handleGoogleLogin}
                     className="w-full py-2.5 bg-white border border-border rounded-xl flex items-center justify-center gap-2 text-sm font-medium hover:bg-muted transition-colors"
                   >
                     <GoogleIcon />

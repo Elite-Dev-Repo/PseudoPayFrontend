@@ -62,28 +62,28 @@ const Business = () => {
   return (
     <section className="min-h-screen w-screen" id="business">
       <div className="cont min-h-screen flex flex-col justify-center gap-8 py-12">
-        <div className="flex items-end justify-between">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-4xl font-bold">Built for your Business</h3>
-            <p className="text-lg text-muted-foreground">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col gap-2 text-center md:text-left">
+            <h3 className="text-3xl sm:text-4xl font-bold">Built for your Business</h3>
+            <p className="text-base sm:text-lg text-muted-foreground">
               The complete payments stack to start, scale and automate your
               internet business.
             </p>
           </div>
-          <Link to={localStorage.getItem(ACCESS) ? "/dashboard" : "/auth"}>
+          <Link to={localStorage.getItem(ACCESS) ? "/dashboard" : "/auth"} className="self-center md:self-auto">
             <button className="px-5 py-2 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
               Start Selling <ArrowUpRight strokeWidth={1.5} size={19} />
             </button>
           </Link>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {solutions.map((solution, index) => (
             <div
               key={index}
               className={`rounded-2xl p-6 flex flex-col items-start justify-between gap-6 min-h-52 ${
                 index === 0
-                  ? "col-span-2 bg-primary text-white"
+                  ? "sm:col-span-2 bg-primary text-white"
                   : "bg-slate-50"
               }`}
             >
@@ -99,7 +99,7 @@ const Business = () => {
               <div className="flex flex-col gap-2">
                 <h4 className="text-xl font-semibold">{solution.title}</h4>
                 <p
-                  className={`font-light text-md ${index === 0 ? "w-[70%]" : ""}`}
+                  className={`font-light text-md ${index === 0 ? "w-full md:w-[70%]" : ""}`}
                 >
                   {solution.description}
                 </p>
@@ -108,16 +108,18 @@ const Business = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="rounded-2xl bg-slate-50 p-6 flex items-center gap-4"
+              className="rounded-2xl bg-slate-50 p-4 sm:p-6 flex items-center gap-3 sm:gap-4"
             >
-              <Wallet size={24} className="text-primary" />
+              <Wallet size={24} className="text-primary shrink-0" />
               <div className="flex flex-col">
-                <span className="text-2xl font-bold">{stat.value}</span>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xl sm:text-2xl font-bold">
+                  {stat.value}
+                </span>
+                <span className="text-xs sm:text-sm text-muted-foreground">
                   {stat.label}
                 </span>
               </div>
