@@ -7,19 +7,19 @@ const About = () => {
       icon: <ShieldCheck />,
       title: "Secure Payments",
       description:
-        "PseudoPay is a secure and reliable payment gateway that allows you to send and receive payments from anywhere in the world.",
+        "Accounts start inactive until the email is verified, login is JWT-protected, and API keys are stored only as SHA-256 hashes.",
     },
     {
       icon: <Rabbit />,
       title: "Fast Transactions",
       description:
-        "PseudoPay is a secure and reliable payment gateway that allows you to send and receive payments from anywhere in the world.",
+        "Initialize a DEBIT or CREDIT in one REST call. State updates to SUCCESSFUL instantly and the wallet balance is adjusted atomically.",
     },
     {
       icon: <BookOpenCheck />,
       title: "Easy to Use",
       description:
-        "PseudoPay is a secure and reliable payment gateway that allows you to send and receive payments from anywhere in the world.",
+        "A simple REST API, hosted checkout and webhooks. No card handling, no PCI scope — just a transaction reference to charge.",
     },
   ];
 
@@ -37,9 +37,10 @@ const About = () => {
           </div>
           <div className="flex-1">
             <p className="text-base sm:text-lg font-semibold p-3 text-center md:text-left">
-              PseudoPay is a secure and reliable payment gateway <br className="hidden lg:block" /> that
-              allows you to send and receive payments <br className="hidden lg:block" /> from anywhere in
-              the world.
+              PseudoPay is a mock payment gateway for internet businesses.{" "}
+              <br className="hidden lg:block" /> Issue wallets, initialize
+              transactions and send <br className="hidden lg:block" /> customers to a hosted checkout to test
+              your integration.
             </p>
           </div>
         </div>

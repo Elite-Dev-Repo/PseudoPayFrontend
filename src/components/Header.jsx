@@ -144,8 +144,9 @@ const Header = () => {
               <br className="hidden lg:block" /> Internet Businesses
             </h1>
             <p className="text-base sm:text-lg">
-              Accept payments, automate billing, and monetize your software
-              globally. We handle the money, so you can focus on building.
+              Build and test a complete payment flow end-to-end. Issue wallets,
+              initialize transactions and send customers to a hosted checkout —
+              all with a simple REST API.
             </p>
             <Link to="/dashboard" className="self-center lg:self-start">
               <button className="pl-5 pr-3 py-2 rounded-full bg-primary text-primary-foreground text-base font-semibold flex items-center gap-3">

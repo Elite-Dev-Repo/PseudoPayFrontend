@@ -39,8 +39,8 @@ const Contact = () => {
                 PseudoPay
               </p>
               <p className="text-sm font-light text-white/70">
-                The mock payment gateway for internet businesses. Accept
-                payments, automate billing and scale globally.
+                The mock payment gateway for internet businesses. Issue
+                wallets, take mock payments and test your full payment flow.
               </p>
               <div className="flex items-center gap-3">
                 {socials.map((social) => (

@@ -16,47 +16,47 @@ const Business = () => {
   const solutions = [
     {
       icon: <Link2 size={20} />,
-      title: "Payment Links",
+      title: "Merchant Wallets",
       description:
-        "Create and share payment links in seconds. No code required.",
+        "Create up to 3 business wallets in NGN, USD or EUR, each preloaded with a 500,000 mock balance.",
     },
     {
       icon: <CreditCard size={20} />,
-      title: "Subscriptions & Billing",
+      title: "Transaction API",
       description:
-        "Automate recurring billing with flexible plans, trials and dunning.",
+        "Initialize DEBIT and CREDIT transactions with a single REST call and a secret API key.",
     },
     {
       icon: <Globe size={20} />,
-      title: "Global Payments",
+      title: "Hosted Checkout",
       description:
-        "Accept payments in multiple currencies from customers worldwide.",
+        "Send customers to PseudoPay's hosted payment page — completing it updates your wallet balance instantly.",
     },
     {
       icon: <Zap size={20} />,
-      title: "Instant Payouts",
+      title: "Webhooks",
       description:
-        "Withdraw your balance instantly to any bank account or digital wallet.",
+        "Get real-time payment confirmations POSTed to the request_origin URL configured on your wallet.",
     },
     {
       icon: <Lock size={20} />,
-      title: "Fraud Protection",
+      title: "Secret API Keys",
       description:
-        "AI-powered risk scoring and chargeback management built into every payment.",
+        "Generate sk_pseudo_ keys for your servers. Only a SHA-256 hash is stored — the raw key is shown once.",
     },
     {
       icon: <LineChart size={20} />,
-      title: "Analytics & Insights",
+      title: "Email Verification",
       description:
-        "Track revenue, conversion and customer behaviour in real time.",
+        "Accounts start inactive until verified with a 15-minute token, keeping bots and bad actors out.",
     },
   ];
 
   const stats = [
-    { value: "250K+", label: "Businesses" },
-    { value: "$10M+", label: "Processed" },
-    { value: "99.9%", label: "Uptime" },
-    { value: "150+", label: "Countries" },
+    { value: "500K", label: "Mock start balance" },
+    { value: "3", label: "Currencies" },
+    { value: "2", label: "Transaction types" },
+    { value: "15 min", label: "Verification token" },
   ];
 
   return (
@@ -66,13 +66,13 @@ const Business = () => {
           <div className="flex flex-col gap-2 text-center md:text-left">
             <h3 className="text-3xl sm:text-4xl font-bold">Built for your Business</h3>
             <p className="text-base sm:text-lg text-muted-foreground">
-              The complete payments stack to start, scale and automate your
-              internet business.
+              Everything you need to build and test a full payment
+              integration.
             </p>
           </div>
           <Link to={localStorage.getItem(ACCESS) ? "/dashboard" : "/auth"} className="self-center md:self-auto">
             <button className="px-5 py-2 bg-primary text-primary-foreground rounded-full flex items-center gap-2">
-              Start Selling <ArrowUpRight strokeWidth={1.5} size={19} />
+              Get Started <ArrowUpRight strokeWidth={1.5} size={19} />
             </button>
           </Link>
         </div>

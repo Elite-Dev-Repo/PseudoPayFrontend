@@ -8,27 +8,27 @@ const Faqs = () => {
     {
       question: "How do I get started with PseudoPay?",
       answer:
-        "Sign up for free, verify your business details, and start accepting payments in minutes. No monthly fees, no lengthy onboarding.",
+        "Create an account, verify your email with the token we send, then create a wallet and generate an API key from the dashboard — all in a few minutes.",
     },
     {
-      question: "When will I receive my payouts?",
+      question: "How do payments work here?",
       answer:
-        "Payouts are processed instantly. You can withdraw your balance to any bank account or digital wallet at any time.",
+        "Initialize a DEBIT or CREDIT transaction against an ACTIVE wallet (minimum 500). PseudoPay returns a checkout URL; completing it marks the transaction SUCCESSFUL and updates the balance instantly.",
     },
     {
       question: "What are the transaction fees?",
       answer:
-        "We charge a flat 2.9% + $0.30 per successful transaction. There are no hidden fees, setup costs or monthly charges.",
+        "There are no fees — PseudoPay is a mock gateway. Wallets start with a 500,000.00 mock balance and no real money ever moves.",
     },
     {
-      question: "Which payment methods do you support?",
+      question: "Which currencies and payment methods do you support?",
       answer:
-        "We support credit and debit cards, bank transfers and popular digital wallets across 150+ countries and 30+ currencies.",
+        "Wallets come in NGN, USD or EUR, and customers pay through PseudoPay's hosted mock checkout page. Webhook notifications and email receipts are sent when a payment completes.",
     },
     {
-      question: "Is my money and customer data safe?",
+      question: "Is my data safe?",
       answer:
-        "Yes. PseudoPay is fully PCI-DSS compliant and uses bank-grade 256-bit encryption and AI-powered fraud detection on every transaction.",
+        "Yes. Accounts stay inactive until the email is verified, login uses JWT tokens, and API keys are stored only as SHA-256 hashes — an ideal, safe sandbox for testing.",
     },
   ];
 
