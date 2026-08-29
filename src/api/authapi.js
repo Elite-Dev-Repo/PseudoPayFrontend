@@ -20,3 +20,14 @@ export const updateMerchantProfile = (data) =>
 
 export const updateUserProfile = (data) =>
   api.patch("/update-profile/", data);
+
+// Password reset
+export const requestPasswordReset = (email) =>
+  api.post("/reset-password/", { email });
+
+export const verifyResetToken = (uidb64, token) =>
+  api.get(`/reset-password/verify/${uidb64}/${token}/`);
+
+export const confirmPasswordReset = (data) =>
+  api.post("/reset-password/confirm/", data);
+

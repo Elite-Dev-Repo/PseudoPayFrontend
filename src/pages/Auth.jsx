@@ -540,7 +540,8 @@ const Auth = () => {
                         </label>
                         <button
                           type="button"
-                          className="text-primary font-medium"
+                          onClick={() => navigate("/forgot-password")}
+                          className="text-primary font-medium hover:underline"
                         >
                           Forgot password?
                         </button>
@@ -585,3 +586,4 @@ const Auth = () => {
 };
 
 export default Auth;
+

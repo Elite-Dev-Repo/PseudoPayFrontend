@@ -16,6 +16,7 @@ const PUBLIC_ENDPOINTS = [
   "/resend-code/",
   "/resend-token/",
   "/auth/google/",
+  "/reset-password/",
 ];
 
 const isPublic = (url = "") =>
@@ -99,3 +100,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+

@@ -5,6 +5,8 @@ import "./index.css";
 import App from "./App.jsx";
 import Docs from "./pages/Docs.jsx";
 import Auth from "./pages/Auth.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Overview from "./pages/dashboard/Overview.jsx";
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
   {
     path: "/auth",
     element: <Auth />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password/:uidb64/:token",
+    element: <ResetPassword />,
   },
   {
     path: "/dashboard",
@@ -51,3 +61,4 @@ createRoot(document.getElementById("root")).render(
     </GoogleOAuthProvider>
   </StrictMode>,
 );
+
