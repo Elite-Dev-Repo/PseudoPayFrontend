@@ -2,21 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowUpRight,
-  BookOpen,
   Check,
   CheckCircle2,
   ChevronRight,
   Copy,
   CreditCard,
-  Globe,
   KeyRound,
   Lock,
-  RefreshCw,
   Send,
   ShieldCheck,
   SwatchBook,
   Wallet,
-  Zap,
 } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { GithubIcon } from "@hugeicons/core-free-icons";
@@ -73,8 +69,8 @@ const Endpoint = ({
   auth = "No",
   title,
   description,
-  request,
   requestBody,
+  request,
   response,
   note,
 }) => (
@@ -136,7 +132,7 @@ const NAV = [
   { id: "webhooks", label: "Webhooks" },
   { id: "rate-limits", label: "Rate limits" },
   { id: "errors", label: "Errors" },
-  { id: "sdk", label: "Code examples" },
+  { id: "examples", label: "Server examples" },
 ];
 
 const Docs = () => {
@@ -231,10 +227,10 @@ const Docs = () => {
               Build with the PseudoPay API
             </h1>
             <p className="text-muted-foreground leading-relaxed">
-              PseudoPay is a mock payment gateway for internet businesses. It
+              PseudoPay is a mock payment gateway for testing integrations. It
               lets you issue merchant wallets, initialize transactions, send
-              customers to a hosted checkout page, and get notified in
-              real-time via webhooks — all with a simple REST API.
+              customers to a hosted checkout page, and get notified via
+              webhooks — all with a simple REST API. No real money moves.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
@@ -251,7 +247,7 @@ const Docs = () => {
                 {
                   icon: <Send size={18} />,
                   title: "Webhooks",
-                  text: "Get real-time payment confirmations.",
+                  text: "Get payment confirmations on your own URL.",
                 },
               ].map((f) => (
                 <div
@@ -268,18 +264,17 @@ const Docs = () => {
                 </div>
               ))}
             </div>
-            <CodeBlock
-              title="base url"
-              code={`${BASE_URL}`}
-            />
+            <CodeBlock title="base url" code={BASE_URL} />
           </section>
 
           {/* Getting started */}
-          <section id="getting-started" className="flex flex-col gap-4 scroll-mt-24">
+          <section
+            id="getting-started"
+            className="flex flex-col gap-4 scroll-mt-24"
+          >
             <h2 className="text-2xl font-bold">Getting started</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Follow these four steps to start accepting payments. Everything
-              you need lives in the{" "}
+              Four steps to your first test payment. Everything lives in the{" "}
               <Link to="/dashboard" className="text-primary font-medium">
                 dashboard
               </Link>
@@ -289,19 +284,19 @@ const Docs = () => {
               {[
                 {
                   title: "Create an account",
-                  text: "Register through the sign-up page and verify your email address with the token you receive. You won't be active until you verify.",
+                  text: "Sign up and verify your email with the token we send you. Accounts stay inactive until verified.",
                 },
                 {
                   title: "Create a wallet",
-                  text: "Give your business a wallet. Pick a currency and set your request_origin — the webhook URL PseudoPay will call when payments complete.",
+                  text: "Pick a currency and set request_origin — the webhook URL PseudoPay calls when payments complete.",
                 },
                 {
                   title: "Generate an API key",
-                  text: "Create a secret key from the API Keys page. Send it in the X-Api-Key header when initializing transactions. It is shown only once — store it securely.",
+                  text: "Create a secret key and send it as X-Api-Key when initializing transactions. It is shown only once.",
                 },
                 {
                   title: "Initialize a transaction",
-                  text: "Charge a customer by creating a transaction. PseudoPay returns a checkout URL that redirects to the hosted checkout page.",
+                  text: "Charge a customer from your server. PseudoPay returns a checkout_url — redirect the customer there.",
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -323,33 +318,28 @@ const Docs = () => {
           <section id="flow" className="flex flex-col gap-4 scroll-mt-24">
             <h2 className="text-2xl font-bold">How payments work</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              A single payment moves through five states —{" "}
-              <code className="text-xs">INITIATED</code>,{" "}
-              <code className="text-xs">PENDING</code>,{" "}
-              <code className="text-xs">SUCCESSFUL</code> or{" "}
-              <code className="text-xs">FAILED</code>.
+              A payment moves through{" "}
+              <code className="text-xs">INITIATED</code> →{" "}
+              <code className="text-xs">SUCCESSFUL</code> (or{" "}
+              <code className="text-xs">FAILED</code>). Your integration only
+              touches the first and last steps.
             </p>
             <div className="flex flex-col gap-3">
               {[
                 {
                   icon: <KeyRound size={16} />,
-                  step: "Initialize",
-                  text: "Your server calls POST /transaction/initialize/ with your secret API key. PseudoPay creates the transaction and returns a checkout_url.",
-                },
-                {
-                  icon: <Globe size={16} />,
-                  step: "Redirect",
-                  text: "Your app sends the customer to the hosted checkout page at /api/checkout/<reference>/.",
+                  step: "1. Initialize (your server)",
+                  text: "POST /transaction/initialize/ with your secret API key and an Idempotency-Key. You get back a checkout_url.",
                 },
                 {
                   icon: <CreditCard size={16} />,
-                  step: "Complete",
-                  text: "The customer completes the mock payment. The transaction is marked SUCCESSFUL and the wallet balance is updated atomically.",
+                  step: "2. Redirect (your frontend)",
+                  text: "Send the customer to checkout_url. They pay with the test card 4084 0840 8408 4081 — any future expiry, any CVV.",
                 },
                 {
                   icon: <Send size={16} />,
-                  step: "Notify",
-                  text: "PseudoPay POSTs a webhook to your wallet's request_origin and emails a receipt to the customer.",
+                  step: "3. Fulfil (your webhook)",
+                  text: "PseudoPay POSTs to your wallet's request_origin. Mark the order paid and respond 200 quickly.",
                 },
               ].map((s) => (
                 <div
@@ -370,9 +360,8 @@ const Docs = () => {
             </div>
             <CodeBlock
               title="javascript — checkout redirect"
-              code={`// After initializing, send your customer to the hosted page
-const { checkout_url } = await initializeTransaction(payload);
-window.location.href = checkout_url;`}
+              code={`// After initializing on your server, redirect the customer
+window.location.href = checkout_url; // from POST /transaction/initialize/`}
             />
           </section>
 
@@ -380,14 +369,16 @@ window.location.href = checkout_url;`}
           <section id="auth" className="flex flex-col gap-4 scroll-mt-24">
             <h2 className="text-2xl font-bold">Authentication</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              PseudoPay uses JWT access and refresh tokens. Send the access
-              token in the{" "}
-              <code className="text-xs">Authorization: Bearer &lt;token&gt;</code>{" "}
-              header. Access tokens last 15 days; refresh tokens last 30.
+              Two schemes, two audiences. Dashboard operations (wallets, keys,
+              profile) use JWT:{" "}
+              <code className="text-xs">Authorization: Bearer &lt;token&gt;</code>
+              . Charging customers uses your secret API key:{" "}
+              <code className="text-xs">X-Api-Key: sk_pseudo_…</code>. Access
+              tokens last 5 days; refresh tokens last 30 days.
             </p>
             <Endpoint
               method="POST"
-              path="/api/auth/token/"
+              path="/auth/token/"
               auth="No"
               title="Log in"
               description="Exchange your email and password for a JWT pair."
@@ -395,9 +386,6 @@ window.location.href = checkout_url;`}
   "email": "merchant@example.com",
   "password": "S3curePass123!"
 }`}
-              request={`curl -X POST ${BASE_URL}/auth/token/ \\
-  -H "Content-Type: application/json" \\
-  -d '{"email": "merchant@example.com", "password": "S3curePass123!"}'`}
               response={`{
   "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -405,7 +393,7 @@ window.location.href = checkout_url;`}
             />
             <Endpoint
               method="POST"
-              path="/api/auth/token/refresh/"
+              path="/auth/token/refresh/"
               auth="No"
               title="Refresh access token"
               description="Get a new access token using a valid refresh token."
@@ -416,16 +404,29 @@ window.location.href = checkout_url;`}
   "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }`}
             />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Also available: Google login via{" "}
+              <code className="text-xs">POST /auth/google/</code>, and password
+              reset via{" "}
+              <code className="text-xs">POST /reset-password/</code> →{" "}
+              <code className="text-xs">
+                GET /reset-password/verify/&lt;uidb64&gt;/&lt;token&gt;/
+              </code>{" "}
+              → <code className="text-xs">POST /reset-password/confirm/</code>.
+            </p>
           </section>
 
           {/* Reference */}
           <section id="reference" className="flex flex-col gap-4 scroll-mt-24">
             <h2 className="text-2xl font-bold">API reference</h2>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Paths below are relative to the base URL above.
+            </p>
 
             <h3 className="text-lg font-semibold mt-4">Accounts</h3>
             <Endpoint
               method="POST"
-              path="/api/register/"
+              path="/register/"
               auth="No"
               title="Create an account"
               description="Register a new merchant. Accounts start inactive until the email token is verified."
@@ -437,21 +438,10 @@ window.location.href = checkout_url;`}
   "date_of_birth": "1995-06-15",
   "gender": "Female"
 }`}
-              request={`curl -X POST ${BASE_URL}/register/ \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "first_name": "Jane",
-    "last_name": "Doe",
-    "email": "merchant@example.com",
-    "password": "S3curePass123!",
-    "gender": "Female"
-  }'`}
               response={`{
   "id": 1,
   "first_name": "Jane",
   "last_name": "Doe",
-  "date_of_birth": "1995-06-15",
-  "gender": "Female",
   "email": "merchant@example.com",
   "profile": null
 }`}
@@ -459,7 +449,7 @@ window.location.href = checkout_url;`}
             />
             <Endpoint
               method="POST"
-              path="/api/verify-email/"
+              path="/verify-email/"
               auth="No"
               title="Verify your email"
               description="Confirm your account with the token sent to your inbox."
@@ -469,239 +459,105 @@ window.location.href = checkout_url;`}
               response={`{
   "message": "Email verified successfully"
 }`}
-              note="Verification tokens expire after 15 minutes."
-            />
-            <Endpoint
-              method="POST"
-              path="/api/resend-code/"
-              auth="No"
-              title="Resend verification code"
-              description="Generate a new verification token for an inactive account. Use this sparingly — it is rate limited."
-              requestBody={`{
-  "email": "merchant@example.com"
-}`}
-              response={`{
-  "message": "Email verification token resent successfully"
-}`}
-            />
-
-            <h3 className="text-lg font-semibold mt-8">Profile</h3>
-            <Endpoint
-              method="GET"
-              path="/api/profile/"
-              auth="Bearer token"
-              title="Get your profile"
-              description="Return the authenticated merchant's user and merchant profile."
-              request={`curl ${BASE_URL}/profile/ \\
-  -H "Authorization: Bearer <your access token>"`}
-              response={`{
-  "id": 1,
-  "first_name": "Jane",
-  "last_name": "Doe",
-  "date_of_birth": "1995-06-15",
-  "gender": "Female",
-  "email": "merchant@example.com",
-  "profile": {
-    "id": 1,
-    "user": 1,
-    "user_type": "free",
-    "merchant_address": "12 Payment Ave, Lagos",
-    "merchant_phone": "+2348012345678",
-    "merchant_email": "merchant@example.com",
-    "merchant_description": "We sell digital goods."
-  }
-}`}
-            />
-            <Endpoint
-              method="PUT"
-              path="/api/update-merchant-profile/"
-              auth="Bearer token"
-              title="Update merchant profile"
-              description="Update your merchant details. user, user_type and merchant_email are read-only."
-              requestBody={`{
-  "merchant_address": "12 Payment Ave, Lagos",
-  "merchant_phone": "+2348012345678",
-  "merchant_description": "We sell digital goods."
-}`}
-              request={`curl -X PUT ${BASE_URL}/update-merchant-profile/ \\
-  -H "Authorization: Bearer <your access token>" \\
-  -H "Content-Type: application/json" \\
-  -d '{"merchant_address": "12 Payment Ave, Lagos"}'`}
+              note="Tokens expire after 15 minutes. Lost it? POST /resend-code/ with {email} for a new one."
             />
 
             <h3 className="text-lg font-semibold mt-8">Wallets</h3>
             <Endpoint
-              method="GET"
-              path="/api/wallet/"
-              auth="Bearer token"
-              title="List wallets"
-              description="List all wallets on your merchant profile (max 3)."
-              request={`curl ${BASE_URL}/wallet/ \\
-  -H "Authorization: Bearer <your access token>"`}
-              response={`[
-  {
-    "id": 1,
-    "profile": 1,
-    "balance": "500000.00",
-    "currency": "NGN",
-    "status": "ACTIVE",
-    "request_origin": "https://mysite.com/pseudopay/webhook",
-    "created_at": "2026-08-10T12:00:00Z"
-  }
-]`}
-            />
-            <Endpoint
               method="POST"
-              path="/api/wallet/"
+              path="/wallet/"
               auth="Bearer token"
               title="Create a wallet"
-              description="Create a new currency wallet. Currency is NGN, USD or EUR. New wallets start with a 500,000.00 mock balance."
+              description="Create a currency wallet (NGN, USD or EUR). New wallets start with a 500,000.00 mock balance."
               requestBody={`{
   "currency": "NGN",
   "status": "ACTIVE",
   "request_origin": "https://mysite.com/pseudopay/webhook"
 }`}
-              request={`curl -X POST ${BASE_URL}/wallet/ \\
-  -H "Authorization: Bearer <your access token>" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "currency": "NGN",
-    "request_origin": "https://mysite.com/pseudopay/webhook"
-  }'`}
               response={`{
   "id": 1,
   "profile": 1,
   "balance": "500000.00",
   "currency": "NGN",
   "status": "ACTIVE",
-  "request_origin": "https://mysite.com/pseudopay/webhook",
-  "created_at": "2026-08-10T12:00:00Z"
+  "request_origin": "https://mysite.com/pseudopay/webhook"
 }`}
-              note="You can only have 3 wallets. balance and profile are managed by PseudoPay."
+              note="Max 3 wallets per merchant. balance and profile are managed by PseudoPay."
             />
             <Endpoint
-              method="PATCH"
-              path="/api/wallet/&lt;id&gt;/"
+              method="GET"
+              path="/wallet/"
               auth="Bearer token"
-              title="Update a wallet"
-              description="Change the request_origin (webhook URL) for a wallet. Only the owner (or a superuser) can do this."
+              title="List wallets"
+              description="List all wallets on your merchant profile."
+            />
+            <Endpoint
+              method="PUT"
+              path="/wallet/<id>/"
+              auth="Bearer token"
+              title="Point a wallet at your webhook"
+              description="Set the request_origin URL PseudoPay calls when payments complete. PUT and PATCH both work."
               requestBody={`{
-  "request_origin": "https://mysite.com/new-webhook-endpoint"
+  "request_origin": "https://mysite.com/pseudopay/webhook"
 }`}
-              request={`curl -X PATCH ${BASE_URL}/wallet/1/ \\
-  -H "Authorization: Bearer <your access token>" \\
-  -H "Content-Type: application/json" \\
-  -d '{"request_origin": "https://mysite.com/new-webhook-endpoint"}'`}
             />
 
             <h3 className="text-lg font-semibold mt-8">API keys</h3>
             <Endpoint
-              method="GET"
-              path="/api/api-keys/"
-              auth="Bearer token"
-              title="List API keys"
-              description="List your secret keys. Only the prefix and metadata are returned — the full key is never shown again."
-              request={`curl ${BASE_URL}/api-keys/ \\
-  -H "Authorization: Bearer <your access token>"`}
-              response={`[
-  {
-    "id": 1,
-    "user": 1,
-    "name": "Production server",
-    "prefix": "sk_pseudo_",
-    "is_active": true,
-    "created_at": "2026-08-10T12:00:00Z"
-  }
-]`}
-            />
-            <Endpoint
               method="POST"
-              path="/api/api-keys/create/"
+              path="/api-keys/create/"
               auth="Bearer token"
               title="Create an API key"
-              description="Generate a new secret key. The full raw key is returned once in raw_key — save it immediately."
+              description="Generate a secret key for server-side calls. The full key is returned once — save it immediately."
               requestBody={`{
   "name": "Production server"
 }`}
-              request={`curl -X POST ${BASE_URL}/api-keys/create/ \\
-  -H "Authorization: Bearer <your access token>" \\
-  -H "Content-Type: application/json" \\
-  -d '{"name": "Production server"}'`}
               response={`{
   "id": 1,
-  "user": 1,
   "name": "Production server",
   "prefix": "sk_pseudo_",
   "is_active": true,
-  "created_at": "2026-08-10T12:00:00Z",
   "raw_key": "sk_pseudo_9fT2...xKp7"
 }`}
-              note="Store raw keys like passwords. PseudoPay only keeps a SHA-256 hash of the key."
-            />
-            <Endpoint
-              method="DELETE"
-              path="/api/api-keys/&lt;id&gt;/"
-              auth="Bearer token"
-              title="Delete an API key"
-              description="Revoke a secret key. Only the owner can delete their own key."
-              request={`curl -X DELETE ${BASE_URL}/api-keys/1/ \\
-  -H "Authorization: Bearer <your access token>"`}
-              response={`204 No Content`}
+              note="PseudoPay stores only a SHA-256 hash. List keys with GET /api-keys/; revoke with DELETE /api-keys/<id>/."
             />
 
             <h3 className="text-lg font-semibold mt-8">Transactions</h3>
             <Endpoint
               method="GET"
-              path="/api/transaction/"
+              path="/transaction/"
               auth="Bearer token"
               title="List transactions"
-              description="List transactions for the authenticated merchant's wallet."
-              request={`curl ${BASE_URL}/transaction/ \\
-  -H "Authorization: Bearer <your access token>"`}
-              response={`[
-  {
-    "id": 1,
-    "user": "merchant@example.com",
-    "wallet": 1,
-    "amount": "5000.00",
-    "transaction_type": "DEBIT",
-    "transaction_status": "SUCCESSFUL",
-    "transaction_reference": "TRX-1a2b3c4d1700000000000",
-    "customer_email": "customer@example.com",
-    "customer_name": "Alice",
-    "transaction_metadata": { "order_id": "ORD-123" },
-    "created_at": "2026-08-10T12:00:00Z"
-  }
-]`}
+              description="List transactions on your merchant profile."
             />
             <Endpoint
               method="POST"
-              path="/api/transaction/initialize/"
+              path="/transaction/initialize/"
               auth="X-Api-Key"
               title="Initialize a transaction"
-              description="Create a transaction and get a checkout URL to redirect your customer to. Authenticate with your secret API key, not a bearer token."
+              description="Create a transaction and get a checkout_url to redirect your customer to. Uses your secret API key — never call this from the browser."
               requestBody={`{
   "wallet": 1,
   "amount": 5000,
   "transaction_type": "DEBIT",
   "customer_email": "customer@example.com",
   "customer_name": "Alice",
-  "currency": "NGN",
   "transaction_metadata": { "order_id": "ORD-123" }
 }`}
               request={`curl -X POST ${BASE_URL}/transaction/initialize/ \\
   -H "X-Api-Key: sk_pseudo_9fT2...xKp7" \\
+  -H "Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000" \\
   -H "Content-Type: application/json" \\
   -d '{
     "wallet": 1,
     "amount": 5000,
     "transaction_type": "DEBIT",
     "customer_email": "customer@example.com",
-    "customer_name": "Alice"
+    "customer_name": "Alice",
+    "transaction_metadata": { "order_id": "ORD-123" }
   }'`}
               response={`{
   "id": 1,
-  "user": "merchant@example.com",
   "wallet": 1,
   "amount": "5000.00",
   "transaction_type": "DEBIT",
@@ -710,40 +566,52 @@ window.location.href = checkout_url;`}
   "customer_email": "customer@example.com",
   "customer_name": "Alice",
   "transaction_metadata": { "order_id": "ORD-123" },
-  "created_at": "2026-08-10T12:00:00Z",
-  "checkout_url": "https://pseudopaybackend.onrender.com/api/checkout/TRX-1a2b3c4d1700000000000/"
+  "checkout_url": "${BASE_URL}/checkout/TRX-1a2b3c4d1700000000000/"
 }`}
-              note="transaction_type is DEBIT or CREDIT and amount cannot be less than 500. The wallet must be ACTIVE. You may also send the key as Authorization: Api-Key <key>."
+              note="amount must be >= 500, transaction_type is DEBIT or CREDIT, and the wallet must be ACTIVE. Fallback header Authorization: Api-Key <key> also works."
             />
 
-            <h3 className="text-lg font-semibold mt-8">Checkout</h3>
-            <Endpoint
-              method="GET"
-              path="/api/checkout/&lt;reference&gt;/"
-              auth="No"
-              title="Hosted checkout page"
-              description="PseudoPay's hosted payment page for a transaction. Redirect your customer here. Completing it marks the transaction SUCCESSFUL and updates the wallet."
-              request={`curl ${BASE_URL}/checkout/TRX-1a2b3c4d1700000000000/`}
-              response={`200 OK (HTML)`}
-            />
-            <Endpoint
-              method="GET"
-              path="/api/payment/success/&lt;reference&gt;/"
-              auth="No"
-              title="Payment success page"
-              description="Confirmation page shown after a successful payment."
-              response={`200 OK (HTML)`}
-            />
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 flex flex-col gap-2">
+              <p className="text-sm font-semibold">
+                Idempotency-Key is required
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Every initialize call must send{" "}
+                <code className="text-xs">Idempotency-Key: &lt;uuid4&gt;</code>.
+                Retrying with the same key and the same body replays the
+                original response without creating a second transaction.
+                Reusing a key with a different body returns{" "}
+                <code className="text-xs">409 Conflict</code>. Generate one key
+                per checkout and keep it across retries.
+              </p>
+            </div>
+
+            <h3 className="text-lg font-semibold mt-8">Hosted pages</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              <code className="text-xs">
+                GET /checkout/&lt;reference&gt;/
+              </code>{" "}
+              is the payment page customers complete;{" "}
+              <code className="text-xs">
+                GET /payment/success/&lt;reference&gt;/
+              </code>{" "}
+              is the confirmation page. Both are public HTML — just redirect,
+              there is nothing to integrate.
+            </p>
           </section>
 
           {/* Webhooks */}
           <section id="webhooks" className="flex flex-col gap-4 scroll-mt-24">
             <h2 className="text-2xl font-bold">Webhooks</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              When a transaction completes, PseudoPay sends a{" "}
-              <code className="text-xs">POST</code> request to the{" "}
-              <code className="text-xs">request_origin</code> URL configured on
-              your wallet.
+              When a transaction completes, PseudoPay{" "}
+              <code className="text-xs">POST</code>s to the{" "}
+              <code className="text-xs">request_origin</code> URL on your
+              wallet. Webhooks are unsigned and carry no order reference of
+              their own — that is why{" "}
+              <code className="text-xs">transaction_metadata.order_id</code> in
+              your initialize call matters: it is the only way to link the
+              callback to your order.
             </p>
             <CodeBlock
               title="json — webhook payload"
@@ -755,19 +623,23 @@ window.location.href = checkout_url;`}
 }`}
             />
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Your endpoint should respond with a 2xx quickly and ideally
-              verify the request. A minimal Express handler looks like this:
+              Fulfil idempotently: if the order is already paid, just return
+              200. Always verify the amount matches before fulfilling, and
+              respond with 2xx quickly (retry logic is not guaranteed).
             </p>
             <CodeBlock
               title="javascript — express"
-              code={`app.post("/pseudopay/webhook", express.json(), (req, res) => {
-  const { transaction_id, amount, status } = req.body;
+              code={`app.post("/pseudopay/webhook", express.json(), async (req, res) => {
+  const { amount, status } = req.body;
+  // Link via the order_id YOU sent in transaction_metadata at init time.
+  const orderId = req.body.transaction_metadata?.order_id;
+  const order = orderId ? await db.orders.findById(orderId) : null;
 
-  if (status === "SUCCESSFUL") {
-    // Fulfil the order, update your database, send a receipt...
-    console.log("Payment confirmed:", transaction_id, amount);
+  if (!order) return res.sendStatus(404);
+  if (order.status === "paid") return res.sendStatus(200); // replay-safe
+  if (status === "SUCCESSFUL" && Number(amount) === Number(order.amount)) {
+    await db.orders.markPaid(order.id);
   }
-
   res.sendStatus(200);
 });`}
             />
@@ -777,10 +649,10 @@ window.location.href = checkout_url;`}
           <section id="rate-limits" className="flex flex-col gap-4 scroll-mt-24">
             <h2 className="text-2xl font-bold">Rate limits</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Requests are throttled per scope using sliding windows. When you
-              exceed a limit you get{" "}
+              Exceeding a limit returns{" "}
               <code className="text-xs">429 Too Many Requests</code> with a{" "}
-              <code className="text-xs">Retry-After</code> header.
+              <code className="text-xs">Retry-After</code> header. These are
+              the scopes integrators hit most:
             </p>
             <div className="overflow-x-auto rounded-xl border border-border">
               <table className="w-full text-sm min-w-[420px]">
@@ -793,16 +665,11 @@ window.location.href = checkout_url;`}
                 </thead>
                 <tbody className="divide-y divide-border">
                   {[
-                    ["anon", "10 / minute", "Unauthenticated requests (e.g. login, register)"],
-                    ["register", "5 / hour", "Creating new accounts"],
-                    ["resend_email", "3 / hour", "Resending verification codes"],
-                    ["auth/google", "10 / minute", "Google OAuth login"],
-                    ["verify_email", "10 / minute", "Email verification"],
-                    ["wallet", "100 / minute", "Wallet reads and updates"],
-                    ["profile", "30 / minute", "Profile reads and updates"],
-                    ["transactions", "60 / minute", "Listing transactions"],
                     ["payments", "30 / minute", "Initializing transactions"],
+                    ["transactions", "60 / minute", "Listing transactions"],
+                    ["wallet", "100 / minute", "Wallet reads and updates"],
                     ["api_keys", "30 / minute", "Managing API keys"],
+                    ["anon", "50 / minute", "Unauthenticated requests"],
                   ].map(([scope, limit, applies]) => (
                     <tr key={scope}>
                       <td className="px-4 py-3 font-mono text-xs">{scope}</td>
@@ -815,22 +682,34 @@ window.location.href = checkout_url;`}
                 </tbody>
               </table>
             </div>
-            <CodeBlock
-              title="json — 429 response"
-              code={`{
-  "detail": "Request was throttled. Expected available in 42 seconds."
-}`}
-            />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Account scopes are tighter: registration 5/hour, verification
+              emails 3/hour, password reset 20/hour.
+            </p>
           </section>
 
           {/* Errors */}
           <section id="errors" className="flex flex-col gap-4 scroll-mt-24">
             <h2 className="text-2xl font-bold">Errors</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              PseudoPay uses standard HTTP status codes. Validation failures
-              return field-level error maps; framework errors return a{" "}
-              <code className="text-xs">detail</code> key.
+              Validation failures return field-level maps; framework errors
+              return a <code className="text-xs">detail</code> key. The errors
+              you will actually hit while integrating:
             </p>
+            <CodeBlock
+              title="json — initialize errors"
+              code={`// Missing / malformed Idempotency-Key ............ 400
+{ "details": "a valid idempotency key is required" }
+
+// amount < 500 ................................... 400
+{ "amount": ["Amount cannot be less than 500"] }
+
+// Wallet not ACTIVE .............................. 400
+{ "error": "Wallet is not active" }
+
+// Same key, different body ........................ 409
+{ "error": "Duplicate key error for another transaction" }`}
+            />
             <div className="overflow-x-auto rounded-xl border border-border">
               <table className="w-full text-sm min-w-[440px]">
                 <thead>
@@ -841,12 +720,12 @@ window.location.href = checkout_url;`}
                 </thead>
                 <tbody className="divide-y divide-border">
                   {[
-                    ["400 Bad Request", "Invalid or missing fields in the request body."],
+                    ["400 Bad Request", "Invalid body, headers, or wallet state."],
                     ["401 Unauthorized", "Missing or invalid token / API key."],
-                    ["403 Forbidden", "Authenticated but not allowed to do this."],
-                    ["404 Not Found", "The resource does not exist (e.g. bad wallet id)."],
-                    ["429 Too Many Requests", "Rate limit exceeded. Retry after the Retry-After window."],
-                    ["500 Internal Server Error", "Something went wrong on our side."],
+                    ["403 Forbidden", "Authenticated but not allowed."],
+                    ["404 Not Found", "Bad id or reference."],
+                    ["409 Conflict", "Idempotency-Key reused with a new body."],
+                    ["429 Too Many Requests", "Slow down and retry."],
                   ].map(([code, meaning]) => (
                     <tr key={code}>
                       <td className="px-4 py-3 font-mono text-xs">{code}</td>
@@ -858,127 +737,83 @@ window.location.href = checkout_url;`}
                 </tbody>
               </table>
             </div>
-            <CodeBlock
-              title="json — validation error"
-              code={`{
-  "amount": ["Amount cannot be less than 500"],
-  "customer_email": ["Enter a valid email address."]
-}`}
-            />
           </section>
 
-          {/* SDK */}
-          <section id="sdk" className="flex flex-col gap-4 scroll-mt-24">
-            <h2 className="text-2xl font-bold">Code examples</h2>
+          {/* Server examples */}
+          <section id="examples" className="flex flex-col gap-4 scroll-mt-24">
+            <h2 className="text-2xl font-bold">Server examples</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Complete end-to-end examples in JavaScript and Python.
+              Initialize from your server — never expose your secret key in the
+              browser. Both examples do the same thing: create a transaction
+              and print the URL to redirect the customer to.
             </p>
 
-            <div className="flex items-center gap-2 mt-1">
-              <Zap size={16} className="text-primary" />
-              <h3 className="font-semibold">JavaScript — full lifecycle</h3>
-            </div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-2">
+              Node.js
+            </p>
             <CodeBlock
               title="javascript"
-              code={`import axios from "axios";
+              code={`import { randomUUID } from "crypto";
 
-const api = axios.create({ baseURL: "https://pseudopaybackend.onrender.com/api" });
-let accessToken = null;
+const res = await fetch("${BASE_URL}/transaction/initialize/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Api-Key": process.env.PSEUDOPAY_SECRET_KEY,
+    "Idempotency-Key": randomUUID(), // one per checkout, reuse on retry
+  },
+  body: JSON.stringify({
+    wallet: 1,
+    amount: 5000,
+    transaction_type: "DEBIT",
+    customer_email: "customer@example.com",
+    customer_name: "Alice",
+    transaction_metadata: { order_id: "ORD-123" }, // link webhooks to orders
+  }),
+});
 
-// 1. Log in
-async function login() {
-  const { data } = await api.post("/auth/token/", {
-    email: "merchant@example.com",
-    password: "S3curePass123!",
-  });
-  accessToken = data.access;
-  api.defaults.headers.Authorization = \`Bearer \${accessToken}\`;
-}
-
-// 2. Create a wallet
-async function createWallet() {
-  const { data } = await api.post("/wallet/", {
-    currency: "NGN",
-    request_origin: "https://mysite.com/pseudopay/webhook",
-  });
-  return data.id;
-}
-
-// 3. Initialize a payment (server-side, with your secret key)
-async function initializePayment(walletId) {
-  const { data } = await axios.post(
-    "https://pseudopaybackend.onrender.com/api/transaction/initialize/",
-    {
-      wallet: walletId,
-      amount: 5000,
-      transaction_type: "DEBIT",
-      customer_email: "customer@example.com",
-      customer_name: "Alice",
-    },
-    { headers: { "X-Api-Key": process.env.PSEUDOPAY_SECRET_KEY } },
-  );
-  return data.checkout_url;
-}
-
-await login();
-const walletId = await createWallet();
-const checkoutUrl = await initializePayment(walletId);
-// window.location.href = checkoutUrl;`}
+const data = await res.json();
+console.log(data.checkout_url); // redirect the customer here`}
             />
 
-            <div className="flex items-center gap-2 mt-6">
-              <BookOpen size={16} className="text-primary" />
-              <h3 className="font-semibold">Python — initialize a payment</h3>
-            </div>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-4">
+              Python
+            </p>
             <CodeBlock
               title="python"
-              code={`import requests
+              code={`import os
+import requests
+from uuid import uuid4
 
-BASE_URL = "https://pseudopaybackend.onrender.com/api"
-SECRET_KEY = "sk_pseudo_9fT2...xKp7"  # your secret API key
+BASE_URL = "${BASE_URL}"
 
 response = requests.post(
     f"{BASE_URL}/transaction/initialize/",
-    headers={"X-Api-Key": SECRET_KEY},
+    headers={
+        "X-Api-Key": os.environ["PSEUDOPAY_SECRET_KEY"],
+        "Idempotency-Key": str(uuid4()),  # one per checkout, reuse on retry
+    },
     json={
         "wallet": 1,
         "amount": 5000,
         "transaction_type": "DEBIT",
         "customer_email": "customer@example.com",
         "customer_name": "Alice",
+        "transaction_metadata": {"order_id": "ORD-123"},
     },
 )
 
 data = response.json()
 print(data["checkout_url"])  # redirect the customer here`}
             />
-
-            <div className="flex items-center gap-2 mt-6">
-              <RefreshCw size={16} className="text-primary" />
-              <h3 className="font-semibold">Python — receive a webhook</h3>
-            </div>
-            <CodeBlock
-              title="python"
-              code={`from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-import json
-
-
-@csrf_exempt
-@require_POST
-def pseudopay_webhook(request):
-    payload = json.loads(request.body)
-    if payload["status"] == "SUCCESSFUL":
-        # Update your database / fulfil the order
-        pass
-    return JsonResponse({"received": True})`}
-            />
           </section>
 
           <footer className="flex items-center justify-between border-t border-border pt-6 text-sm text-muted-foreground">
             <p>&copy; 2026 PseudoPay. Docs for developers.</p>
-            <Link to="/dashboard" className="flex items-center gap-1 font-medium text-primary">
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1 font-medium text-primary"
+            >
               Go to dashboard <ArrowUpRight size={15} />
             </Link>
           </footer>
