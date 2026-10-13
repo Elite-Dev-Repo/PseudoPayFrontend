@@ -12,6 +12,7 @@ import { listWallets, listTransactions } from "../../api/walletapi";
 import {
   Badge,
   Card,
+  CopyableId,
   PageHeader,
   Spinner,
   EmptyState,
@@ -142,6 +143,12 @@ const Overview = () => {
                     <p className="text-xs text-muted-foreground">
                       {wallet.request_origin || "No origin set"}
                     </p>
+                    <div className="mt-1">
+                      <CopyableId
+                        value={wallet.wallet_id ?? wallet.id}
+                        label="Wallet ID"
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     <span className="font-semibold">

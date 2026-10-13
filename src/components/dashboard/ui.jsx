@@ -1,4 +1,5 @@
-import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Check, Copy, Loader2 } from "lucide-react";
 
 export const PageHeader = ({ title, description, action }) => (
   <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
@@ -102,6 +103,47 @@ export const Field = ({ label, children, hint }) => (
 
 export const inputClasses =
   "w-full py-2.5 px-3.5 bg-muted/60 border border-transparent rounded-xl text-sm outline-none placeholder:text-muted-foreground/60 focus:bg-background focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all";
+
+export const CopyableId = ({ value, label = "ID" }) => {
+  const [copied, setCopied] = useState(false);
+
+  if (value === null || value === undefined || value === "") return null;
+
+  const text = String(value);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const el = document.createElement("textarea");
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-lg bg-slate-50 px-2 py-1 text-xs text-muted-foreground font-mono max-w-full">
+      <span className="font-sans font-medium text-muted-foreground">
+        {label}:
+      </span>
+      <span className="truncate">{text}</span>
+      <button
+        type="button"
+        onClick={handleCopy}
+        title={copied ? "Copied!" : `Copy ${label}`}
+        aria-label={`Copy ${label} ${text}`}
+        className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors shrink-0"
+      >
+        {copied ? <Check size={13} /> : <Copy size={13} />}
+      </button>
+    </span>
+  );
+};
 
 export const Modal = ({ open, onClose, title, children }) => {
   if (!open) return null;

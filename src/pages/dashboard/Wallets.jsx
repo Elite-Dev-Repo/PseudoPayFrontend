@@ -6,6 +6,7 @@ import {
   Badge,
   Button,
   Card,
+  CopyableId,
   EmptyState,
   ErrorBanner,
   Field,
@@ -156,6 +157,12 @@ const Wallets = () => {
                     minimumFractionDigits: 2,
                   })}
                 </p>
+                <div className="mt-2">
+                  <CopyableId
+                    value={wallet.wallet_id ?? wallet.id}
+                    label="Wallet ID"
+                  />
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-xs text-muted-foreground truncate">
